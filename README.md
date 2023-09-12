@@ -1,18 +1,12 @@
-# Create T3 App
+# Weaviate GUI
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This project was bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## How can i contribute?
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Since I just made this a few days ago, I'm still working out some kinks. If you have an interest in helping to build out this project, email me at beni@listr.app
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+I am also working on instructions for how we should perform pull and push requests, and the rules necessary in place.
 
 ## Learn More
 
