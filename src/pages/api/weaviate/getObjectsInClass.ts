@@ -9,12 +9,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const className = "ClassOfCards29";
+  const class_name = req.body.class_name;
 
   try {
     let result = await client.graphql
       .get()
-      .withClassName(className)
+      .withClassName(class_name)
       .withFields("nickname image")
       .do();
 

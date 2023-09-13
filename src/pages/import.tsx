@@ -1,75 +1,73 @@
-import React, { useState } from "react";
-import Button from "components/Button"; // Make sure to provide the correct path to your Button component
+import React, { useEffect, useState } from "react";
 
 const ImportData = () => {
   const [classes, setClasses] = useState([]);
 
+  useEffect(() => {
+    onGetSchema();
+  }, []);
+
   const onGetSchema = async () => {
     const schema = await fetch("/api/weaviate/getSchema");
     const schemaJson = await schema.json();
-    console.log({ schemaJson });
+    setClasses(schemaJson.classes);
+  };
+
+  const onGetObjectsInClass = () => async (class_name: string) => {
+    async () =>
+      await fetch("/api/weaviate/getObjectsInClass", {
+        method: "POST",
+        body: JSON.stringify({ class: class_name }),
+      });
+  };
+
+  const Button = ({ onButtonClick, children }: any) => {
+    return (
+      <button
+        className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
+        onClick={onButtonClick}
+      >
+        {children}
+      </button>
+    );
   };
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#126d02] to-[#15162c] p-8">
+    <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#126d02] to-[#15162c] p-8 text-center">
       <div className="h-full w-full bg-slate-300">
-        <h1 className="text-center">Connect to your Weaviate</h1>
+        <div className="w-full">
+          <h1 className="text-bold font-bold">My Weaviate Database</h1>
+          {}
+          <div className="flex flex-col items-center">
+            <div>Number of Classes: {classes.length}</div>
+            <div>
+              <h2>My Classes</h2>
+              <ul>
+                {classes.map((c) => (
+                  <div className="flex items-center gap-x-2" key={c.class}>
+                    <li>Class Name: {c.class}</li>
+                    <Button onButtonClick={() => onGetObjectsInClass(c.class)}>
+                      Get Class Objects
+                    </Button>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
 
-        <div className="mt-8 flex flex-col gap-y-1 px-16">
-          <Button variant="secondary" onClick={onGetSchema}>
-            Get my account schema
-          </Button>
-
-          <br />
-
+        <div className="mt-8 flex justify-center gap-x-4 px-16">
           <Button
-            variant="secondary"
-            onClick={async () => await fetch("/api/weaviate/addClass")}
+            onButtonClick={async () => await fetch("/api/weaviate/addClass")}
           >
-            add weaviate classd
+            Add weaviate class
           </Button>
-
-          <br />
-
           <Button
-            variant="secondary"
-            onClick={async () => await fetch("/api/weaviate/getObjectsInClass")}
-          >
-            get weavite objects for class
-          </Button>
-
-          <br />
-
-          <Button
-            variant="secondary"
-            onClick={async () => {
-              const resp = await fetch("/api/weaviate/batchImport");
-              console.log({ resp });
-            }}
-          >
-            Import MTG Gathering Client Side
-          </Button>
-
-          <br />
-
-          <Button
-            variant="secondary"
-            onClick={async () => await fetch("/api/weaviate/searchByImage")}
-          >
-            search by image
-          </Button>
-
-          <br />
-
-          <Button
-            variant="secondary"
-            onClick={() =>
-              makeUrlBlob(
-                "https://cards.scryfall.io/border_crop/front/0/0/0000579f-7b35-4ed3-b44c-db2a538066fe.jpg?1562894979",
-              )
+            onButtonClick={async () =>
+              await fetch("/api/weaviate/searchByImage")
             }
           >
-            make a base 64 from image url
+            search by image
           </Button>
         </div>
       </div>
@@ -78,3 +76,14 @@ const ImportData = () => {
 };
 
 export default ImportData;
+
+{
+  /* <Button
+            onButtonClick={async () => {
+              const resp = await fetch("/api/weaviate/batchImport");
+              console.log({ resp });
+            }}
+          >
+            Import MTG Gathering Client Side
+          </Button> */
+}
