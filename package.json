@@ -9,8 +9,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@t3-oss/env-nextjs": "^0.6.0",
+    "clsx": "^2.0.0",
     "framer-motion": "^10.16.4",
+    "heroicons": "^2.0.18",
     "next": "^13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
