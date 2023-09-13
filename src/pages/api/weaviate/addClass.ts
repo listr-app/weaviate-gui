@@ -9,11 +9,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const {
-    class_name,
-  }: {
-    class_name: string;
-  } = req.body;
+  // const {
+  //   class_name,
+  // }: {
+  //   class_name: string;
+  // } = req.body;
+
+  // console.log(req.body);
+  // console.log({ class_name });
+
+  const class_name = req.body.class_name;
+
+  console.log({ class_name });
 
   try {
     const emptyClassDefinition = {
@@ -51,7 +58,8 @@ export default async function handler(
   } catch (error) {
     console.log({ error });
     res.status(500).json({
-      error: "Something went wrong in /weaviate addClass",
+      message: "Something went wrong in /weaviate addClass",
+      error: error,
     });
   }
 }

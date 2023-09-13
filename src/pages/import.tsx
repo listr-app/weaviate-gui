@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const ImportData = () => {
   const [classes, setClasses] = useState([]);
+  const [classNameInput, setClassNameInput] = useState("");
 
   useEffect(() => {
     onGetSchema();
@@ -12,13 +13,36 @@ const ImportData = () => {
     const schemaJson = await schema.json();
     setClasses(schemaJson.classes);
   };
+  const onAddWeaviateClass = (class_name: string) => async () => {
+    const requestBody = {
+      class_name: class_name,
+    };
 
-  const onGetObjectsInClass = () => async (class_name: string) => {
-    async () =>
-      await fetch("/api/weaviate/getObjectsInClass", {
-        method: "POST",
-        body: JSON.stringify({ class: class_name }),
-      });
+    await fetch("/api/weaviate/addClass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Specify the content type as JSON
+      },
+      body: JSON.stringify(requestBody), // Convert the object to a JSON string
+    });
+
+    onGetSchema();
+  };
+
+  const onGetObjectsInClass = async (class_name: string) => {
+    const requestBody = {
+      class_name: class_name,
+    };
+    const class_objects = await fetch("/api/weaviate/getObjectsInClass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const classObjectsJson = await class_objects.json();
+    console.log(classObjectsJson);
   };
 
   const Button = ({ onButtonClick, children }: any) => {
@@ -44,7 +68,7 @@ const ImportData = () => {
               <h2>My Classes</h2>
               <ul>
                 {classes.map((c) => (
-                  <div className="flex items-center gap-x-2" key={c.class}>
+                  <div className="flex justify-between gap-x-2" key={c.class}>
                     <li>Class Name: {c.class}</li>
                     <Button onButtonClick={() => onGetObjectsInClass(c.class)}>
                       Get Class Objects
@@ -56,19 +80,32 @@ const ImportData = () => {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center gap-x-4 px-16">
-          <Button
-            onButtonClick={async () => await fetch("/api/weaviate/addClass")}
-          >
-            Add weaviate class
-          </Button>
-          <Button
-            onButtonClick={async () =>
-              await fetch("/api/weaviate/searchByImage")
-            }
-          >
-            search by image
-          </Button>
+        <div className="mt-24 flex flex-col gap-2">
+          <div>
+            <div>
+              <Button onButtonClick={onAddWeaviateClass(classNameInput)}>
+                Add weaviate class
+              </Button>
+            </div>
+            <input
+              placeholder="Ex: Dogs"
+              onChange={(e) => setClassNameInput(e.target.value)}
+              value={classNameInput}
+            />
+          </div>
+
+          <div>
+            <div>
+              <Button onButtonClick={onAddWeaviateClass(classNameInput)}>
+                Add objects to Weaviate class
+              </Button>
+            </div>
+            <input
+              placeholder="Ex: Dogs"
+              onChange={(e) => setClassNameInput(e.target.value)}
+              value={classNameInput}
+            />
+          </div>
         </div>
       </div>
     </main>
@@ -86,4 +123,16 @@ export default ImportData;
           >
             Import MTG Gathering Client Side
           </Button> */
+}
+
+{
+  /* <div>
+            <Button
+              onButtonClick={async () =>
+                await fetch("/api/weaviate/searchByImage")
+              }
+            >
+              search by image
+            </Button>
+          </div> */
 }

@@ -9,7 +9,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  console.log(req.body);
+
   const class_name = req.body.class_name;
+
+  console.log(class_name);
 
   try {
     let result = await client.graphql
@@ -19,9 +23,7 @@ export default async function handler(
       .do();
 
     console.log(result.data);
-    res.status(200).json({
-      result: result,
-    });
+    res.status(200).json(result);
   } catch (error) {
     console.log({ error });
     res.status(500).json({
