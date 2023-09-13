@@ -3,15 +3,22 @@ import React, { useEffect, useState } from "react";
 const ImportData = () => {
   const [classes, setClasses] = useState([]);
   const [classNameInput, setClassNameInput] = useState("");
+  const [connectedToWeaviate, setConnectedToWeaviate] = useState(false);
+  const [weaviateHost, setWeaviateHost] = useState("http:localhost:8080");
 
   useEffect(() => {
     onGetSchema();
   }, []);
 
   const onGetSchema = async () => {
-    const schema = await fetch("/api/weaviate/getSchema");
-    const schemaJson = await schema.json();
-    setClasses(schemaJson.classes);
+    try {
+      const schema = await fetch("/api/weaviate/getSchema");
+      const schemaJson = await schema.json();
+      setClasses(schemaJson.classes);
+      setConnectedToWeaviate(true);
+    } catch (error) {
+      console.log({ error });
+    }
   };
   const onAddWeaviateClass = (class_name: string) => async () => {
     const requestBody = {
@@ -61,7 +68,23 @@ const ImportData = () => {
       <div className="h-full w-full bg-slate-300">
         <div className="w-full">
           <h1 className="text-bold font-bold">My Weaviate Database</h1>
-          {}
+
+          <div className="my-8 flex justify-center gap-x-6">
+            <h3>
+              Host: <input />
+            </h3>
+            <h3>
+              API Key: <input />
+            </h3>
+          </div>
+          <div className="flex justify-center ">
+            <div className="rounded-lg bg-green-500 p-4">
+              {connectedToWeaviate
+                ? " Connected to Weaviate"
+                : "Click here to connect your weaviate module"}
+            </div>
+          </div>
+
           <div className="flex flex-col items-center">
             <div>Number of Classes: {classes.length}</div>
             <div>
@@ -95,16 +118,11 @@ const ImportData = () => {
           </div>
 
           <div>
-            <div>
+            <div className="mt-4">
               <Button onButtonClick={onAddWeaviateClass(classNameInput)}>
-                Add objects to Weaviate class
+                Import Images into a class
               </Button>
             </div>
-            <input
-              placeholder="Ex: Dogs"
-              onChange={(e) => setClassNameInput(e.target.value)}
-              value={classNameInput}
-            />
           </div>
         </div>
       </div>
