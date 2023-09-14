@@ -1,4 +1,4 @@
-import Button from "@/components/buttons/button";
+import Button from "weaviate-gui/components/buttons/button";
 import React, { useEffect, useState } from "react";
 
 const DataVisualizer = () => {
