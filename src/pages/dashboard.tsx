@@ -13,10 +13,18 @@ import {
   TableCellsIcon,
   CloudArrowUpIcon,
   ArrowPathRoundedSquareIcon,
+  ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
 import { Fragment, useState } from "react";
+import DataVisualizer from "weaviate-gui/views/dashboard/data-visualizer";
 
 const navigation = [
+  {
+    name: "Quick Start",
+    href: "#",
+    icon: ChevronDoubleRightIcon,
+    current: false,
+  },
   { name: "Data Visualizer", href: "#", icon: TableCellsIcon, current: true },
   { name: "Data Importer", href: "#", icon: CloudArrowUpIcon, current: false },
   {
@@ -42,7 +50,14 @@ function classNames(...classes: string[]) {
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [view, setView] = useState("data-visualizer");
 
+  const renderView = (view: string) => {
+    //based on the view in useState, render the view
+    if (view === "data-visualizer") {
+      return <DataVisualizer />;
+    }
+  };
   return (
     <>
       {/*
@@ -116,7 +131,10 @@ export default function Dashboard() {
                         <li>
                           <ul role="list" className="-mx-2 space-y-1">
                             {navigation.map((item) => (
-                              <li key={item.name}>
+                              <li
+                                key={item.name}
+                                onClick={() => console.log({ item })}
+                              >
                                 <a
                                   href={item.href}
                                   className={classNames(
@@ -368,9 +386,7 @@ export default function Dashboard() {
           </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">
-              {/* Your content */}sadfs
-            </div>
+            <div className="px-4 sm:px-6 lg:px-8">{renderView(view)}</div>
           </main>
         </div>
       </div>

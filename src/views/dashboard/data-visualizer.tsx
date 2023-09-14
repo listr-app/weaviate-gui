@@ -1,7 +1,7 @@
 import Button from "@/components/buttons/button";
 import React, { useEffect, useState } from "react";
 
-const ImportData = () => {
+const DataVisualizer = () => {
   const [classes, setClasses] = useState([]);
   const [classNameInput, setClassNameInput] = useState("");
   const [connectedToWeaviate, setConnectedToWeaviate] = useState(false);
@@ -53,20 +53,9 @@ const ImportData = () => {
     console.log(classObjectsJson);
   };
 
-  // const Button = ({ onButtonClick, children }: any) => {
-  //   return (
-  //     <button
-  //       className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
-  //       onClick={onButtonClick}
-  //     >
-  //       {children}
-  //     </button>
-  //   );
-  // };
-
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#126d02] to-[#15162c] p-8 text-center">
-      <div className="h-full w-full bg-slate-300">
+    <main className="flex min-h-screen flex-col p-8 text-center">
+      <div className="h-full w-full">
         <div className="w-full">
           <h1 className="text-bold font-bold">My Weaviate Database</h1>
 
@@ -140,27 +129,4 @@ const ImportData = () => {
   );
 };
 
-export default ImportData;
-
-{
-  /* <Button
-            onButtonClick={async () => {
-              const resp = await fetch("/api/weaviate/batchImport");
-              console.log({ resp });
-            }}
-          >
-            Import MTG Gathering Client Side
-          </Button> */
-}
-
-{
-  /* <div>
-            <Button
-              onButtonClick={async () =>
-                await fetch("/api/weaviate/searchByImage")
-              }
-            >
-              search by image
-            </Button>
-          </div> */
-}
+export default DataVisualizer;
