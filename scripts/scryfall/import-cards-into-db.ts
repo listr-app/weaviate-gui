@@ -7,8 +7,6 @@ import { client } from "../../weaviate/client";
 const { readFile } = fs.promises;
 const SAMPLE_DATA_PATH = "./test/data/scryfall/unique-artwork.sample.json";
 const DATA_PATH = "./test/data/scryfall/cards-with-base64.json";
-const IMAGES_PATH = "dist/images/mtg";
-const OUTPUT_JSON_PATH = "./output/cards-with-base64.json";
 
 let count = 0;
 (async () => {
@@ -54,18 +52,25 @@ let count = 0;
       try {
         // add card to import batch
         count++;
-        console.log(`Importing card number ${key}...`, card.name);
-        batcher = batcher.withObject(card);
+        console.log(`Adding card number ${key}...`, card.name);
+        batcher = batcher.withObject({
+          properties: {
+            name: card.name,
+            image: card.base64,
+          },
+          class: "ScryfallCard",
+        });
       } catch (error) {
         console.log("Error importing card", card.name, error);
       }
     },
   ]);
 
-  pipeline.on("end", async () => {
+  pipeline.on("finish", async () => {
     try {
+      console.log("Importing cards...");
       const resp = await batcher.do();
-      console.log(resp);
+      console.dir(resp, { depth: 1 });
       console.log(`${count} cards imported!`);
     } catch (error) {
       console.log("Error importing cards", error);

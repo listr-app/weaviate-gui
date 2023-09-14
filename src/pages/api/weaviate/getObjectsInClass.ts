@@ -19,7 +19,7 @@ export default async function handler(
     let result = await client.graphql
       .get()
       .withClassName(class_name)
-      .withFields("nickname image")
+      .withFields("name image")
       .do();
 
     console.log(result.data);
