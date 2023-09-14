@@ -90,7 +90,7 @@ const ImportData = () => {
             <div>
               <h2>My Classes</h2>
               <ul>
-                {classes.map((c) => (
+                {classes.map((c: any) => (
                   <div className="flex justify-between gap-x-2" key={c.class}>
                     <li>Class Name: {c.class}</li>
                     <Button onButtonClick={() => onGetObjectsInClass(c.class)}>
