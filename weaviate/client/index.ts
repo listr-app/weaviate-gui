@@ -1,6 +1,6 @@
 import weaviate, { WeaviateClient, ApiKey } from "weaviate-ts-client";
 
-export const client: WeaviateClient = weaviate.client({
+export const client = weaviate.client({
   scheme: "http",
   host: "localhost:8080", // Replace with your endpoint
   // apiKey: new ApiKey("rvIOODTLIJaMropyiudJQiSk2nOZjaNzMM21"),

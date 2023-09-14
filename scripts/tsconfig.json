@@ -5,10 +5,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ESNext"
-  },
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["../*"]
+    "target": "ESNext",
+    "paths": {
+      "@/*": ["../*"]
+    }
   }
 }

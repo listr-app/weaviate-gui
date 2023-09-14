@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
+    "composite": true,
     "baseUrl": ".",
     "paths": {
       "weaviate-gui/*": ["./src/*"],
