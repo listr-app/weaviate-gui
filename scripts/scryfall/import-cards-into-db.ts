@@ -51,8 +51,19 @@ let count = 0;
     async ({ key, value: card }: { key: number; value: Card }) => {
       try {
         // add card to import batch
-        count++;
         console.log(`Adding card number ${key}...`, card.name);
+        if (!card.base64 || !card.name) {
+          console.log("No base64 image found");
+          return;
+        }
+        count++;
+
+        if (count % 100 === 0) {
+          await batcher.withConsistencyLevel("ALL").do();
+          console.log(`${count} cards imported!`);
+          batcher = client.batch.objectsBatcher();
+        }
+
         batcher = batcher.withObject({
           properties: {
             name: card.name,
@@ -69,7 +80,7 @@ let count = 0;
   pipeline.on("finish", async () => {
     try {
       console.log("Importing cards...");
-      const resp = await batcher.do();
+      const resp = await batcher.withConsistencyLevel("ALL").do();
       console.dir(resp, { depth: 1 });
       console.log(`${count} cards imported!`);
     } catch (error) {
