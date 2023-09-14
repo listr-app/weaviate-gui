@@ -1,3 +1,4 @@
+import Button from "@/components/buttons/button";
 import React, { useEffect, useState } from "react";
 
 const ImportData = () => {
@@ -52,16 +53,16 @@ const ImportData = () => {
     console.log(classObjectsJson);
   };
 
-  const Button = ({ onButtonClick, children }: any) => {
-    return (
-      <button
-        className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
-        onClick={onButtonClick}
-      >
-        {children}
-      </button>
-    );
-  };
+  // const Button = ({ onButtonClick, children }: any) => {
+  //   return (
+  //     <button
+  //       className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
+  //       onClick={onButtonClick}
+  //     >
+  //       {children}
+  //     </button>
+  //   );
+  // };
 
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#126d02] to-[#15162c] p-8 text-center">
@@ -93,7 +94,10 @@ const ImportData = () => {
                 {classes.map((c: any) => (
                   <div className="flex justify-between gap-x-2" key={c.class}>
                     <li>Class Name: {c.class}</li>
-                    <Button onButtonClick={() => onGetObjectsInClass(c.class)}>
+                    <Button
+                      variant="primary"
+                      onClick={() => onGetObjectsInClass(c.class)}
+                    >
                       Get Class Objects
                     </Button>
                   </div>
@@ -106,7 +110,10 @@ const ImportData = () => {
         <div className="mt-24 flex flex-col gap-2">
           <div>
             <div>
-              <Button onButtonClick={onAddWeaviateClass(classNameInput)}>
+              <Button
+                variant="primary"
+                onClick={onAddWeaviateClass(classNameInput)}
+              >
                 Add weaviate class
               </Button>
             </div>
@@ -119,7 +126,10 @@ const ImportData = () => {
 
           <div>
             <div className="mt-4">
-              <Button onButtonClick={onAddWeaviateClass(classNameInput)}>
+              <Button
+                variant="primary"
+                onClick={onAddWeaviateClass(classNameInput)}
+              >
                 Import Images into a class
               </Button>
             </div>
