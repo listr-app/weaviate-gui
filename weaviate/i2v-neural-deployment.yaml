@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.30.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: i2v-neural
+  name: i2v-neural
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: i2v-neural
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.30.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/weaviate-default: "true"
+        io.kompose.service: i2v-neural
+    spec:
+      containers:
+        - env:
+            - name: ENABLE_CUDA
+              value: "0"
+          image: semitechnologies/img2vec-pytorch:resnet50
+          name: i2v-neural
+          resources: {}
+      restartPolicy: Always
+status: {}
