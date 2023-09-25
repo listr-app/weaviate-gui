@@ -68,6 +68,7 @@ let count = 0;
           }
           count++;
 
+          //MAYBE try batches of 10
           if (count % 100 === 0) {
             await batcher.withConsistencyLevel("ALL").do();
             console.log(`${count} cards imported!`);
