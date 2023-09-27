@@ -1,4 +1,3 @@
-import Button from "weaviate-gui/components/buttons/button";
 import React, { useEffect, useState } from "react";
 
 const DataVisualizer = () => {
@@ -15,7 +14,6 @@ const DataVisualizer = () => {
     try {
       const schema = await fetch("/api/weaviate/getSchema");
       const schemaJson = await schema.json();
-      console.log({ schemaJson });
       setClasses(schemaJson.classes);
       setConnectedToWeaviate(true);
     } catch (error) {
@@ -26,20 +24,15 @@ const DataVisualizer = () => {
     const requestBody = {
       class_name: class_name,
     };
-    try {
-      await fetch("/api/weaviate/addClass", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Specify the content type as JSON
-        },
-        body: JSON.stringify(requestBody), // Convert the object to a JSON string
-      });
-    } catch (error) {
-      console.log("something went wrong!");
-      console.log({ error });
-    }
 
-    console.log("all good");
+    await fetch("/api/weaviate/addClass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Specify the content type as JSON
+      },
+      body: JSON.stringify(requestBody), // Convert the object to a JSON string
+    });
+
     onGetSchema();
   };
 

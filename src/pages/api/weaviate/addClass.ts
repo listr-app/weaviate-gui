@@ -33,7 +33,6 @@ export default async function handler(
       properties: [
         {
           dataType: ["blob"],
-          description: "Grayscale image",
           name: "image",
         },
         {

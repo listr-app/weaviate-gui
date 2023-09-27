@@ -6,7 +6,8 @@ import { streamArray } from "stream-json/streamers/StreamArray";
 import { client } from "../../weaviate/client";
 const { readFile } = fs.promises;
 const SAMPLE_DATA_PATH = "./test/data/scryfall/unique-artwork.sample.json";
-const DATA_PATH = "./test/data/scryfall/cards-with-base64.json";
+const DATA_PATH =
+  "/Users/beni/Documents/Listr-New/weaviate-gui/test/data/scryfall/new-data-4.json";
 
 let count = 0;
 (async () => {
@@ -58,11 +59,11 @@ let count = 0;
       fs.createReadStream(DATA_PATH),
       parser(),
       streamArray(),
-      async ({ key, value: card }: { key: number; value: Card }) => {
+      async ({ key, value: card }: { key: number; value: any }) => {
         try {
           // add card to import batch
           console.log(`Adding card number ${key}...`, card.name);
-          if (!card.base64 || !card.name) {
+          if (!card.base64Image || !card.name) {
             console.log("No base64 image found");
             return;
           }
@@ -78,7 +79,7 @@ let count = 0;
           batcher = batcher.withObject({
             properties: {
               name: card.name,
-              image: card.base64,
+              image: card.base64Image,
             },
             class: "ScryfallCard",
           });

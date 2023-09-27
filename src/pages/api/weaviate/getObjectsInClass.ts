@@ -19,7 +19,7 @@ export default async function handler(
     let result = await client.graphql
       .get()
       .withClassName(class_name)
-      .withFields("name image")
+      .withFields("name")
       .do();
 
     console.log(result.data);
@@ -28,6 +28,7 @@ export default async function handler(
     console.log({ error });
     res.status(500).json({
       error: "Something went wrong in /weaviate getObjectsInClass",
+      the_error: error,
     });
   }
 }
