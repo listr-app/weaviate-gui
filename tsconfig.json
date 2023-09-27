@@ -36,6 +36,6 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-  ],
+, "src/convertImagesToBase64.mjs"  ],
   "exclude": ["node_modules"]
 }
