@@ -17,6 +17,7 @@ export default async function handler(
     console.log(error);
     res.status(500).json({
       error: "Something went wrong in /weaviate getClient",
+      errorMessage: error,
     });
   }
 }

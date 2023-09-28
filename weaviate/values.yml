@@ -215,10 +215,10 @@ env:
   QUERY_MAXIMUM_RESULTS: 100000
 
   # whether to enable vector dimensions tracking metric
-  TRACK_VECTOR_DIMENSIONS: false
+  TRACK_VECTOR_DIMENSIONS: true
 
   # whether to re-index/-compute the vector dimensions metric (needed if upgrading from weaviate < v1.16.0)
-  REINDEX_VECTOR_DIMENSIONS_AT_STARTUP: false
+  REINDEX_VECTOR_DIMENSIONS_AT_STARTUP: true
 
   ##########################
   # API Keys with ENV Vars #
@@ -782,7 +782,7 @@ modules:
   multi2vec-clip:
 
     # Enable deployment of this module
-    enabled: false
+    enabled: true
 
     # You can set directly an inference URL of this module without deploying it with this release.
     # You can do so by setting a value for the `inferenceUrl` here AND by setting the `enable` to `false`

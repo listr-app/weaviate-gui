@@ -6,6 +6,7 @@ const DataVisualizer = () => {
   const [classNameInput, setClassNameInput] = useState("");
   const [connectedToWeaviate, setConnectedToWeaviate] = useState(false);
   const [weaviateHost, setWeaviateHost] = useState("http:localhost:8080");
+  const [classObjects, setClassesObjects] = useState([]);
 
   useEffect(() => {
     onGetSchema();
@@ -22,6 +23,7 @@ const DataVisualizer = () => {
       console.log({ error });
     }
   };
+
   const onAddWeaviateClass = (class_name: string) => async () => {
     const requestBody = {
       class_name: class_name,
@@ -56,7 +58,9 @@ const DataVisualizer = () => {
     });
 
     const classObjectsJson = await class_objects.json();
-    console.log(classObjectsJson);
+    const classObjectsArray = classObjectsJson.data.Get[class_name];
+
+    setClassesObjects(classObjectsArray);
   };
 
   return (
@@ -81,29 +85,51 @@ const DataVisualizer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center">
-            <div>Number of Classes: {classes.length}</div>
-            <div>
-              <h2>My Classes</h2>
-              <ul>
-                {classes.map((c: any) => (
-                  <div className="flex justify-between gap-x-2" key={c.class}>
-                    <li>Class Name: {c.class}</li>
-                    <Button
-                      variant="primary"
-                      onClick={() => onGetObjectsInClass(c.class)}
-                    >
-                      Get Class Objects
-                    </Button>
-                  </div>
-                ))}
-              </ul>
+          {classes?.length > 0 && (
+            <div className="flex flex-col items-center">
+              <div>Number of Classes: {classes?.length}</div>
+              <div>
+                <h2>My Classes</h2>
+                <ul>
+                  {classes.map((c: any) => (
+                    <div className="flex justify-between gap-x-2" key={c.class}>
+                      <li>Class Name: {c.class}</li>
+                      <Button
+                        variant="primary"
+                        onClick={() => onGetObjectsInClass(c.class)}
+                      >
+                        Get Class Objects
+                      </Button>
+                    </div>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
+        </div>
+
+        <div className="flex gap-x-2 overflow-x-auto">
+          {classObjects.length
+            ? classObjects.map((obj: any) => {
+                return (
+                  <div className="flex flex-col " key={obj.name}>
+                    <div className="h-24 font-bold">{obj.name}</div>
+                    <img
+                      src={`data:image/png;base64,${obj.image}`}
+                      alt={obj.name}
+                      className="h-auto w-40"
+                    />
+                  </div>
+                );
+              })
+            : null}
         </div>
 
         <div className="mt-24 flex flex-col gap-2">
           <div>
+            <Button variant="primary" onClick={() => onGetSchema()}>
+              get schema
+            </Button>
             <div>
               <Button
                 variant="primary"
