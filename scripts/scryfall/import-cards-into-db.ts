@@ -1,13 +1,12 @@
-import { Card } from "@/types/Scryfall/Card";
+import { client } from "../../weaviate/client";
+// import type { Card } from "@/types/Scryfall/Card";
 import fs from "fs";
 import { chain } from "stream-chain";
 import { parser } from "stream-json";
 import { streamArray } from "stream-json/streamers/StreamArray";
-import { client } from "../../weaviate/client";
 const { readFile } = fs.promises;
 const SAMPLE_DATA_PATH = "./test/data/scryfall/unique-artwork.sample.json";
-const DATA_PATH =
-  "/Users/beni/Documents/Listr-New/weaviate-gui/test/data/scryfall/new-data-4.json";
+const DATA_PATH = "test/data/scryfall/new-data-4.json";
 
 let count = 0;
 (async () => {
@@ -28,8 +27,11 @@ let count = 0;
       .classCreator()
       .withClass({
         class: "ScryfallCard",
+        description: "A Magic: The Gathering card from Scryfall",
+        vectorizer: "multi2vec-clip",
         moduleConfig: {
-          "img2vec-neural": {
+          "multi2vec-clip": {
+            textFields: ["name"],
             imageFields: ["image"],
           },
         },
@@ -46,10 +48,6 @@ let count = 0;
             tokenization: "word",
           },
         ],
-        vectorizer: "img2vec-neural",
-        vectorIndexConfig: {
-          distance: "cosine",
-        },
       })
       .do();
 
@@ -69,8 +67,8 @@ let count = 0;
           }
           count++;
 
-          //MAYBE try batches of 10
           if (count % 100 === 0) {
+            console.log("Importing batch of cards...");
             await batcher.withConsistencyLevel("ALL").do();
             console.log(`${count} cards imported!`);
             batcher = client.batch.objectsBatcher();
