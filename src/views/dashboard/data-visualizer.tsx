@@ -1,5 +1,7 @@
 import Button from "weaviate-gui/components/buttons/button";
 import React, { useEffect, useState } from "react";
+import { toBase64FromBlob } from "weaviate-ts-client";
+import { client } from "@/weaviate/client";
 
 const DataVisualizer = () => {
   const [classes, setClasses] = useState([]);
@@ -7,6 +9,8 @@ const DataVisualizer = () => {
   const [connectedToWeaviate, setConnectedToWeaviate] = useState(false);
   const [weaviateHost, setWeaviateHost] = useState("http:localhost:8080");
   const [classObjects, setClassesObjects] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageResults, setImageResults] = useState([]);
 
   useEffect(() => {
     onGetSchema();
@@ -46,6 +50,7 @@ const DataVisualizer = () => {
   };
 
   const onGetObjectsInClass = async (class_name: string) => {
+    console.log("get objects in class");
     const requestBody = {
       class_name: class_name,
     };
@@ -57,10 +62,70 @@ const DataVisualizer = () => {
       body: JSON.stringify(requestBody),
     });
 
+    console.log({ class_objects });
+
     const classObjectsJson = await class_objects.json();
     const classObjectsArray = classObjectsJson.data.Get[class_name];
 
     setClassesObjects(classObjectsArray);
+  };
+
+  const onGetObjectsInClassBatch = async (class_name: string) => {
+    const requestBody = {
+      class_name: class_name,
+    };
+    const class_objects = await fetch("/api/weaviate/getObjectsInClassBatch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const classObjectsJson = await class_objects.json();
+    const classObjectsArray = classObjectsJson.data.Get[class_name];
+
+    console.log({ classObjectsArray });
+    // setClassesObjects(classObjectsArray);
+  };
+
+  const onSearchClass = async (class_name: string) => {
+    const requestBody = {
+      class_name: class_name,
+    };
+    const class_objects = await fetch("/api/weaviate/searchClass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const classObjectsJson = await class_objects.json();
+    const classObjectsArray = classObjectsJson.data.Get[class_name];
+
+    console.log({ classObjectsArray });
+    // setClassesObjects(classObjectsArray);
+  };
+
+  const onFileUpload = async (event: any) => {
+    const file = event.target.files[0];
+    const base64: any = await toBase64FromBlob(file);
+    setImagePreview(base64);
+
+    let searchResults = await client.graphql
+      .get()
+      .withClassName("ScryfallCard")
+      .withNearImage({
+        image: base64,
+        distance: 0.3,
+      })
+      .withLimit(5)
+      .withFields("name image")
+      .do();
+
+    setImageResults(searchResults.data.Get["ScryfallCard"]);
+    console.log({ searchResults });
   };
 
   return (
@@ -100,6 +165,12 @@ const DataVisualizer = () => {
                       >
                         Get Class Objects
                       </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => onGetObjectsInClassBatch(c.class)}
+                      >
+                        Get Class Objects Batch
+                      </Button>
                     </div>
                   ))}
                 </ul>
@@ -125,6 +196,50 @@ const DataVisualizer = () => {
             : null}
         </div>
 
+        <div className="mt-8 flex flex-col items-center justify-center px-24">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFileUpload}
+            className="mt-4"
+          />
+
+          {imagePreview && (
+            <div className="mt-4">
+              <img
+                src={imagePreview}
+                alt="Selected Image"
+                className="h-auto w-40"
+              />
+            </div>
+          )}
+
+          {imageResults.length > 0 && (
+            <div className="mt-4">
+              <h2>Search Results</h2>
+              <div className="overflow-x-aut2 flex gap-x-1">
+                {imageResults.map((result: any) => (
+                  <div>
+                    <li key={result.name}>{result.name}</li>
+                    <img
+                      src={`data:image/png;base64,${result.image}`}
+                      alt={result.name}
+                      className="h-auto w-40"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Button
+            variant="primary"
+            onClick={() => onGetObjectsInClassBatch("ScryfallCard")}
+            className="mt-4"
+          >
+            Search Class for Object
+          </Button>
+        </div>
         <div className="mt-24 flex flex-col gap-2">
           <div>
             <Button variant="primary" onClick={() => onGetSchema()}>

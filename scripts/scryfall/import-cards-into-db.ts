@@ -6,7 +6,7 @@ import { parser } from "stream-json";
 import { streamArray } from "stream-json/streamers/StreamArray";
 const { readFile } = fs.promises;
 const SAMPLE_DATA_PATH = "./test/data/scryfall/unique-artwork.sample.json";
-const DATA_PATH = "test/data/scryfall/new-data-4.json";
+const DATA_PATH = "test/data/scryfall/new-data-9.json";
 
 let count = 0;
 (async () => {
@@ -38,12 +38,12 @@ let count = 0;
         properties: [
           {
             dataType: ["blob"],
-            description: "Grayscale image",
+            description: "Card image",
             name: "image",
           },
           {
             dataType: ["text"],
-            description: "card name",
+            description: "Card name",
             name: "name",
             tokenization: "word",
           },
@@ -67,7 +67,7 @@ let count = 0;
           }
           count++;
 
-          if (count % 100 === 0) {
+          if (count % 10 === 0) {
             console.log("Importing batch of cards...");
             await batcher.withConsistencyLevel("ALL").do();
             console.log(`${count} cards imported!`);

@@ -3,7 +3,7 @@ import fs from "fs";
 
 // Function to process a single item and return a promise
 async function processItem(item) {
-  const imageUrl = item.image_uris?.normal; // Assuming the property is optional
+  const imageUrl = item.image_uris?.png; // Assuming the property is optional
 
   console.log(!!imageUrl);
   if (imageUrl) {
@@ -14,9 +14,10 @@ async function processItem(item) {
       const imageBuffer = response.data;
       const base64Image = Buffer.from(imageBuffer).toString("base64");
       console.log(!!base64Image);
+      const cardName = item.name;
 
       return {
-        ...item, // Copy all original properties
+        name: cardName, // Copy all original properties
         base64Image, // Add the base64Image property
       };
     } catch (error) {
@@ -32,7 +33,10 @@ async function processItem(item) {
 const batchSize = 100; // Adjust the batch size as needed
 
 const jsonData = JSON.parse(
-  fs.readFileSync("../../test/data/scryfall/default-main.json", "utf-8"),
+  fs.readFileSync(
+    "/Users/beni/Documents/Listr-New/weaviate-gui/test/data/scryfall/default-main.json",
+    "utf-8",
+  ),
 );
 
 const base64Images = [];
@@ -63,7 +67,8 @@ async function main() {
     index += batchSize; // Increment the index by the batch size
   }
 
-  const outputJsonFile = "../../test/data/scryfall/new-data-4.json";
+  const outputJsonFile =
+    "/Users/beni/Documents/Listr-New/weaviate-gui/test/data/scryfall/new-data-9.json";
 
   fs.writeFileSync(outputJsonFile, JSON.stringify(base64Images, null, 2));
 
